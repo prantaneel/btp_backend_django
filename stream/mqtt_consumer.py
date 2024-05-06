@@ -64,7 +64,7 @@ def on_message(client, userdata, message):
                     print(low_cost_data, w_iter)
                     for _iter in range(len(w_iter)):
                         d_pred = d_pred + low_cost_data[_iter]*w_iter[_iter]
-                    mse_now = ((iteration - 1)*mse_prev + pow(high_cost_data - d_pred, 2))/iteration
+                    mse_now = pow(high_cost_data - d_pred, 2)
                     cmse_arr.append({"mse":mse_now, "iteration": iteration})
                     cmse.iteration = iteration
                     cmse.mse_array = json.dumps(cmse_arr)

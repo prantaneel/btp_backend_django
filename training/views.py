@@ -27,9 +27,13 @@ def train(request):
         mu = float(body["stepSize"])
         iterations = int(body["iterations"])
         weight_size = int(body["weightSize"])
+        error_prob = float(body["error_prob"])
         strategy = body["strategy"]
+        algo = body["algo"]
+        alpha = body["alpha"]
+        beta = body["beta"]
         p_id = generate_pid(10)
-        process = Process(p_id=p_id, strategy=strategy) #creating a new process
+        process = Process(p_id=p_id, strategy=strategy, error_prob=error_prob, algo=algo, alpha = alpha, beta = beta) #creating a new process
         PROCESS_ID = p_id
         process.save()
         number_nodes = int(body["nodeNumber"])
@@ -37,11 +41,13 @@ def train(request):
         # return JsonResponse(iterations, safe=False)
         for _iter in range(number_nodes):
             clear_retained_messages(_iter) #all topics cleared
-        
         for _iter in range(number_nodes):
             # neighbours, edge_weights = generate_ne_we_data(_iter, [[1]], 1)
-            neighbours, edge_weights = generate_ne_we_data(_iter)
-            publish_ne_we_data(_iter, strategy, neighbours, edge_weights, p_id, mu, iterations, weight_size)
+            if strategy == "INCREMENTAL":
+                neighbours, edge_weights = generate_ne_we_data_inc(_iter)
+            else:
+                neighbours, edge_weights = generate_ne_we_data(_iter)
+            publish_ne_we_data(_iter, strategy, neighbours, edge_weights, p_id, mu, iterations, weight_size, error_prob, algo, alpha, beta)
         
     return JsonResponse("OK! Training Started!", safe=False)
 

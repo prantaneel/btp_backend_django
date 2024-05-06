@@ -11,6 +11,12 @@ class BaseModel(models.Model):
 class Process(models.Model):
     p_id = models.CharField(max_length=20, unique=True)
     strategy = models.CharField(max_length=20, unique=False)
+    algo = models.CharField(max_length=20, unique=False, default="LMS")
+    error_prob = models.FloatField(default=0)
+    alpha = models.FloatField(default=0)
+    beta = models.FloatField(default=1)
+    
+    
 
 class Device(BaseModel):
     device_id = models.CharField(max_length=100)
